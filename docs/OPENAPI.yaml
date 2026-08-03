@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: AI-Assisted URL Shortener
+  version: 1.0.0
+paths:
+  /api/v1/urls:
+    post:
+      summary: Create a short URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - originalUrl
+              properties:
+                originalUrl:
+                  type: string
+                  format: uri
+                  example: https://www.schwab.com/
+      responses:
+        "201":
+          description: Short URL created
+        "200":
+          description: Existing short URL returned for duplicate original URL
+        "400":
+          description: Invalid request
+  /{shortCode}:
+    get:
+      summary: Redirect to the original URL
+      parameters:
+        - name: shortCode
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9]{4,32}$
+      responses:
+        "302":
+          description: Redirect to original URL
+        "404":
+          description: Short code not found
+  /api/v1/analytics/{shortCode}:
+    get:
+      summary: Retrieve click analytics for a short code
+      parameters:
+        - name: shortCode
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9]{4,32}$
+      responses:
+        "200":
+          description: Analytics returned
+        "404":
+          description: Short code not found
+  /actuator/health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service health
