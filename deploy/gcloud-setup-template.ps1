@@ -55,6 +55,10 @@ gcloud projects add-iam-policy-binding $ProjectId `
 
 gcloud projects add-iam-policy-binding $ProjectId `
   --member="serviceAccount:$DeployServiceAccount" `
+  --role="roles/cloudsql.viewer"
+
+gcloud projects add-iam-policy-binding $ProjectId `
+  --member="serviceAccount:$DeployServiceAccount" `
   --role="roles/logging.viewer"
 
 gcloud projects add-iam-policy-binding $ProjectId `
