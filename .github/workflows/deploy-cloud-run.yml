@@ -16,16 +16,22 @@ jobs:
   test-build-deploy:
     name: Test, Build, and Deploy
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       id-token: write
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run tests
-        run: docker run --rm -v "${PWD}:/workspace" -w /workspace gradle:8.10.2-jdk21-alpine gradle clean test
+        run: |
+          docker run --rm \
+            -v "${PWD}:/workspace" \
+            -w /workspace \
+            gradle:8.10.2-jdk21-alpine \
+            gradle clean test
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
@@ -38,43 +44,37 @@ jobs:
         uses: google-github-actions/setup-gcloud@v3
 
       - name: Configure Docker for Artifact Registry
-        run: gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+        run: |
+          gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
 
       - id: build
         name: Build Docker image
         run: |
           IMAGE_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REPOSITORY}/${IMAGE_NAME}:${GITHUB_SHA}"
+          echo "Building ${IMAGE_URI}"
           docker build --tag "${IMAGE_URI}" .
           echo "image_uri=${IMAGE_URI}" >> "${GITHUB_OUTPUT}"
 
       - name: Push Docker image
-        run: docker push "${{ steps.build.outputs.image_uri }}"
+        run: |
+          docker push "${{ steps.build.outputs.image_uri }}"
 
       - id: deploy
         name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v3
         with:
+          project_id: ${{ env.PROJECT_ID }}
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.REGION }}
           image: ${{ steps.build.outputs.image_uri }}
           flags: >-
             --platform=managed
             --allow-unauthenticated
-            --service-account=${{ vars.CLOUD_RUN_RUNTIME_SERVICE_ACCOUNT }}
-            --add-cloudsql-instances=${{ vars.CLOUD_SQL_CONNECTION_NAME }}
-            --vpc-connector=${{ vars.SERVERLESS_VPC_CONNECTOR }}
-            --vpc-egress=private-ranges-only
           env_vars: |-
-            APP_BASE_URL=${{ vars.APP_BASE_URL }}
             APP_SHORT_CODE_LENGTH=7
             APP_SHORT_CODE_MAX_ATTEMPTS=10
             APP_CACHE_TTL=24h
-            SPRING_DATASOURCE_URL=jdbc:postgresql:///${{ vars.CLOUD_SQL_DATABASE }}?cloudSqlInstance=${{ vars.CLOUD_SQL_CONNECTION_NAME }}&socketFactory=com.google.cloud.sql.postgres.SocketFactory
-            SPRING_DATA_REDIS_HOST=${{ vars.REDIS_HOST }}
-            SPRING_DATA_REDIS_PORT=${{ vars.REDIS_PORT }}
-          secrets: |-
-            SPRING_DATASOURCE_USERNAME=${{ vars.DB_USERNAME_SECRET }}:latest
-            SPRING_DATASOURCE_PASSWORD=${{ vars.DB_PASSWORD_SECRET }}:latest
 
       - name: Show service URL
-        run: echo "Cloud Run URL ${{ steps.deploy.outputs.url }}"
+        run: |
+          echo "Cloud Run URL: ${{ steps.deploy.outputs.url }}"
