@@ -1,0 +1,49 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: url-shortener
+  annotations:
+    run.googleapis.com/launch-stage: GA
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/cloudsql-instances: PROJECT_ID:REGION:CLOUD_SQL_INSTANCE
+        run.googleapis.com/vpc-access-connector: projects/PROJECT_ID/locations/REGION/connectors/VPC_CONNECTOR_NAME
+        run.googleapis.com/vpc-access-egress: private-ranges-only
+    spec:
+      serviceAccountName: url-shortener-runtime@PROJECT_ID.iam.gserviceaccount.com
+      containers:
+        - image: REGION-docker.pkg.dev/PROJECT_ID/ARTIFACT_REPOSITORY/url-shortener:IMAGE_TAG
+          ports:
+            - name: http1
+              containerPort: 8080
+          env:
+            - name: APP_BASE_URL
+              value: https://YOUR_CLOUD_RUN_URL
+            - name: APP_SHORT_CODE_LENGTH
+              value: "7"
+            - name: APP_SHORT_CODE_MAX_ATTEMPTS
+              value: "10"
+            - name: APP_CACHE_TTL
+              value: 24h
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql:///urlshortener?cloudSqlInstance=PROJECT_ID:REGION:CLOUD_SQL_INSTANCE&socketFactory=com.google.cloud.sql.postgres.SocketFactory
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: url-shortener-db-username
+                  key: latest
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: url-shortener-db-password
+                  key: latest
+            - name: SPRING_DATA_REDIS_HOST
+              value: REDIS_PRIVATE_IP
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi

@@ -1,0 +1,12 @@
+.git
+.github
+.gradle
+build
+data
+tmp
+out
+*.iml
+*.log
+gha-creds-*.json
+README.md
+docs

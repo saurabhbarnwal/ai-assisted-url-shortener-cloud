@@ -56,6 +56,18 @@ The application starts on:
 http://localhost:8080
 ```
 
+## Deploy
+
+Google Cloud Run deployment files are included:
+
+- `.github/workflows/deploy-cloud-run.yml`
+- `deploy/cloud-run-service.yaml`
+- `deploy/gcloud-setup-template.ps1`
+- `deploy/github-actions-variables.md`
+- `docs/DEPLOYMENT_GCP_CLOUD_RUN.md`
+
+Follow the guide in `docs/DEPLOYMENT_GCP_CLOUD_RUN.md`.
+
 ## Test
 
 ```powershell
