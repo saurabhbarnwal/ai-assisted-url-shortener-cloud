@@ -33,5 +33,9 @@ gcloud iam workload-identity-pools providers describe $ProviderId `
   --workload-identity-pool=$PoolId `
   --format="value(name)"
 
-Write-Host "Use the printed provider name as GitHub secret GCP_WORKLOAD_IDENTITY_PROVIDER."
+Write-Host ""
+Write-Host "Use this exact value as GitHub secret GCP_WORKLOAD_IDENTITY_PROVIDER:"
+Write-Host "projects/$ProjectNumber/locations/global/workloadIdentityPools/$PoolId/providers/$ProviderId"
+Write-Host ""
+Write-Host "Do not prefix it with //iam.googleapis.com/."
 Write-Host "Use $DeployServiceAccount as GitHub secret GCP_DEPLOY_SERVICE_ACCOUNT."

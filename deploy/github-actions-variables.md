@@ -22,9 +22,12 @@ Configure these GitHub repository secrets:
 
 | Name | Purpose |
 | --- | --- |
-| `GCP_WORKLOAD_IDENTITY_PROVIDER` | Full Workload Identity Provider resource name |
-| `GCP_DEPLOY_SERVICE_ACCOUNT` | Deployment service account email |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | `projects/204743655262/locations/global/workloadIdentityPools/github/providers/github-main` |
+| `GCP_DEPLOY_SERVICE_ACCOUNT` | `url-shortener-deploy@ai-assisted-url-shortener.iam.gserviceaccount.com` |
 
 Application database credentials belong in Google Secret Manager, not GitHub Secrets.
 
 Use `deploy/workload-identity-setup-template.ps1` to create the Workload Identity Pool and Provider.
+
+Important: `GCP_WORKLOAD_IDENTITY_PROVIDER` must not include the `//iam.googleapis.com/` prefix.
+Use the `projects/.../providers/...` value exactly.

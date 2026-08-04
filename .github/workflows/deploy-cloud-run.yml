@@ -33,6 +33,19 @@ jobs:
             gradle:8.10.2-jdk21-alpine \
             gradle clean test
 
+      - name: Validate Workload Identity Provider format
+        run: |
+          case "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" in
+            projects/*/locations/global/workloadIdentityPools/*/providers/*)
+              echo "Workload Identity Provider format is valid."
+              ;;
+            *)
+              echo "GCP_WORKLOAD_IDENTITY_PROVIDER must look like projects/204743655262/locations/global/workloadIdentityPools/github/providers/github-main"
+              echo "Do not prefix it with //iam.googleapis.com/."
+              exit 1
+              ;;
+          esac
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
         with:
