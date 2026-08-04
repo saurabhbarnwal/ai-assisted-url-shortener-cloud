@@ -53,6 +53,9 @@ gcloud run services logs read url-shortener `
 The GitHub deploy service account needs `roles/logging.viewer` to read these logs from GitHub
 Actions.
 
+The GitHub deploy service account also needs `roles/cloudsql.viewer` and `roles/redis.viewer` for
+the pre-deployment infrastructure validation step.
+
 If startup logs contain `The Cloud SQL instance does not exist`, create or rename the Cloud SQL
 instance so this command succeeds:
 
