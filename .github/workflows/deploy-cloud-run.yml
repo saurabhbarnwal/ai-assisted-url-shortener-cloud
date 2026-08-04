@@ -60,6 +60,17 @@ jobs:
         run: |
           gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
 
+      - name: Validate Cloud Run runtime variables
+        run: |
+          if ! [[ "${{ vars.APP_BASE_URL }}" =~ ^https?:// ]]; then
+            echo "APP_BASE_URL must be a real URL, for example https://your-cloud-run-url.a.run.app"
+            exit 1
+          fi
+          if [[ "${{ vars.REDIS_HOST }}" == *" "* ]] || [[ -z "${{ vars.REDIS_HOST }}" ]]; then
+            echo "REDIS_HOST must be the Memorystore Redis private IP or DNS name, not placeholder text."
+            exit 1
+          fi
+
       - id: build
         name: Build Docker image
         run: |
@@ -92,6 +103,7 @@ jobs:
             APP_SHORT_CODE_LENGTH=7
             APP_SHORT_CODE_MAX_ATTEMPTS=10
             APP_CACHE_TTL=24h
+            SERVER_PORT=8080
             SPRING_DATASOURCE_URL=jdbc:postgresql:///urlshortener?cloudSqlInstance=ai-assisted-url-shortener:us-central1:url-shortener-postgres&socketFactory=com.google.cloud.sql.postgres.SocketFactory
             SPRING_DATA_REDIS_HOST=${{ vars.REDIS_HOST }}
             SPRING_DATA_REDIS_PORT=6379
