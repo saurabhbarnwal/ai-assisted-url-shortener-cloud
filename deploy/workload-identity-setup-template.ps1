@@ -1,7 +1,7 @@
 # Replace values before running.
 $ProjectId = "ai-assisted-url-shortener"
 $ProjectNumber = "204743655262"
-$GitHubRepository = "https://github.com/saurabhbarnwal/ai-assisted-url-shortener-cloud"
+$GitHubRepository = "saurabhbarnwal/ai-assisted-url-shortener-cloud"
 $PoolId = "github"
 $ProviderId = "github-main"
 $DeployServiceAccount = "url-shortener-deploy@$ProjectId.iam.gserviceaccount.com"
