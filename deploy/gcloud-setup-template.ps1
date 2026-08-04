@@ -1,7 +1,7 @@
 # Replace values before running.
 $ProjectId = "ai-assisted-url-shortener"
 $Region = "us-central1"
-$Repository = "url-shortener"
+$Artifact_Repository = "url-shortener"
 $CloudSqlInstance = "url-shortener-postgres"
 $DatabaseName = "urlshortener"
 $DbUsername = "barnwal"
