@@ -23,7 +23,7 @@ gcloud services enable `
   secretmanager.googleapis.com `
   iamcredentials.googleapis.com
 
-gcloud artifacts repositories create $Repository `
+gcloud artifacts repositories create $Artifact_Repository `
   --repository-format=docker `
   --location=$Region `
   --description="URL shortener Docker images"
