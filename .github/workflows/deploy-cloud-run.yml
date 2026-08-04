@@ -9,7 +9,7 @@ env:
   PROJECT_ID: ai-assisted-url-shortener
   REGION: us-central1
   SERVICE_NAME: url-shortener
-  ARTIFACT_REPOSITORY: ${{ vars.ARTIFACT_REPOSITORY }}
+  ARTIFACT_REPOSITORY: url-shortener
   IMAGE_NAME: url-shortener
 
 jobs:
