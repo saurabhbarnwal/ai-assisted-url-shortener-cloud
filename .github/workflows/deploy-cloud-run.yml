@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Run tests
         run: |
@@ -70,10 +70,21 @@ jobs:
           flags: >-
             --platform=managed
             --allow-unauthenticated
+            --service-account=url-shortener-runtime@ai-assisted-url-shortener.iam.gserviceaccount.com
+            --add-cloudsql-instances=ai-assisted-url-shortener:us-central1:url-shortener-postgres
+            --vpc-connector=url-shortener-vpc
+            --vpc-egress=private-ranges-only
           env_vars: |-
+            APP_BASE_URL=${{ vars.APP_BASE_URL }}
             APP_SHORT_CODE_LENGTH=7
             APP_SHORT_CODE_MAX_ATTEMPTS=10
             APP_CACHE_TTL=24h
+            SPRING_DATASOURCE_URL=jdbc:postgresql:///urlshortener?cloudSqlInstance=ai-assisted-url-shortener:us-central1:url-shortener-postgres&socketFactory=com.google.cloud.sql.postgres.SocketFactory
+            SPRING_DATA_REDIS_HOST=${{ vars.REDIS_HOST }}
+            SPRING_DATA_REDIS_PORT=6379
+          secrets: |-
+            SPRING_DATASOURCE_USERNAME=url-shortener-db-username:latest
+            SPRING_DATASOURCE_PASSWORD=url-shortener-db-password:latest
 
       - name: Show service URL
         run: |

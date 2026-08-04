@@ -4,13 +4,13 @@ Configure these GitHub repository variables:
 
 | Name | Example | Secret? |
 | --- | --- | --- |
-| `GCP_PROJECT_ID` | `my-gcp-project` | No |
+| `GCP_PROJECT_ID` | `ai-assisted-url-shortener` | No |
 | `GCP_REGION` | `us-central1` | No |
 | `CLOUD_RUN_SERVICE` | `url-shortener` | No |
-| `CLOUD_RUN_RUNTIME_SERVICE_ACCOUNT` | `url-shortener-runtime@my-gcp-project.iam.gserviceaccount.com` | No |
+| `CLOUD_RUN_RUNTIME_SERVICE_ACCOUNT` | `url-shortener-runtime@ai-assisted-url-shortener.iam.gserviceaccount.com` | No |
 | `ARTIFACT_REPOSITORY` | `url-shortener` | No |
-| `APP_BASE_URL` | `https://url-shortener-abc-uc.a.run.app` | No |
-| `CLOUD_SQL_CONNECTION_NAME` | `my-gcp-project:us-central1:url-shortener-postgres` | No |
+| `APP_BASE_URL` | Cloud Run service URL after first deploy | No |
+| `CLOUD_SQL_CONNECTION_NAME` | `ai-assisted-url-shortener:us-central1:url-shortener-postgres` | No |
 | `CLOUD_SQL_DATABASE` | `urlshortener` | No |
 | `SERVERLESS_VPC_CONNECTOR` | `url-shortener-vpc` | No |
 | `REDIS_HOST` | `10.0.0.5` | No |

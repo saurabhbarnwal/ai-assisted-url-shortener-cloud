@@ -1,17 +1,20 @@
 # Replace values before running.
 $ProjectId = "ai-assisted-url-shortener"
+$ProjectNumber = "204743655262"
+$OwnerEmail = "barnwal@gmail.com"
 $Region = "us-central1"
 $Repository = "url-shortener"
 $CloudSqlInstance = "url-shortener-postgres"
 $DatabaseName = "urlshortener"
-$DbUsername = "barnwal"
-$DbPasswordSecure = Read-Host "barnwal" -AsSecureString
+$DbUsername = "urlshortener"
+$DbPasswordSecure = Read-Host "Enter PostgreSQL password for user urlshortener" -AsSecureString
 $DbPasswordPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($DbPasswordSecure)
 $DbPassword = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($DbPasswordPointer)
 $RuntimeServiceAccount = "url-shortener-runtime@$ProjectId.iam.gserviceaccount.com"
 $DeployServiceAccount = "url-shortener-deploy@$ProjectId.iam.gserviceaccount.com"
 
 gcloud config set project $ProjectId
+gcloud config set account $OwnerEmail
 
 gcloud services enable `
   run.googleapis.com `
@@ -49,6 +52,18 @@ gcloud projects add-iam-policy-binding $ProjectId `
 gcloud projects add-iam-policy-binding $ProjectId `
   --member="serviceAccount:$RuntimeServiceAccount" `
   --role="roles/cloudsql.client"
+
+gcloud projects add-iam-policy-binding $ProjectId `
+  --member="user:$OwnerEmail" `
+  --role="roles/run.admin"
+
+gcloud projects add-iam-policy-binding $ProjectId `
+  --member="user:$OwnerEmail" `
+  --role="roles/artifactregistry.admin"
+
+gcloud projects add-iam-policy-binding $ProjectId `
+  --member="user:$OwnerEmail" `
+  --role="roles/secretmanager.admin"
 
 gcloud sql instances create $CloudSqlInstance `
   --database-version=POSTGRES_16 `

@@ -8,13 +8,13 @@ spec:
   template:
     metadata:
       annotations:
-        run.googleapis.com/cloudsql-instances: PROJECT_ID:REGION:CLOUD_SQL_INSTANCE
-        run.googleapis.com/vpc-access-connector: projects/PROJECT_ID/locations/REGION/connectors/VPC_CONNECTOR_NAME
+        run.googleapis.com/cloudsql-instances: ai-assisted-url-shortener:us-central1:url-shortener-postgres
+        run.googleapis.com/vpc-access-connector: projects/ai-assisted-url-shortener/locations/us-central1/connectors/url-shortener-vpc
         run.googleapis.com/vpc-access-egress: private-ranges-only
     spec:
-      serviceAccountName: url-shortener-runtime@PROJECT_ID.iam.gserviceaccount.com
+      serviceAccountName: url-shortener-runtime@ai-assisted-url-shortener.iam.gserviceaccount.com
       containers:
-        - image: REGION-docker.pkg.dev/PROJECT_ID/ARTIFACT_REPOSITORY/url-shortener:IMAGE_TAG
+        - image: us-central1-docker.pkg.dev/ai-assisted-url-shortener/url-shortener/url-shortener:IMAGE_TAG
           ports:
             - name: http1
               containerPort: 8080
@@ -28,7 +28,7 @@ spec:
             - name: APP_CACHE_TTL
               value: 24h
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql:///urlshortener?cloudSqlInstance=PROJECT_ID:REGION:CLOUD_SQL_INSTANCE&socketFactory=com.google.cloud.sql.postgres.SocketFactory
+              value: jdbc:postgresql:///urlshortener?cloudSqlInstance=ai-assisted-url-shortener:us-central1:url-shortener-postgres&socketFactory=com.google.cloud.sql.postgres.SocketFactory
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
