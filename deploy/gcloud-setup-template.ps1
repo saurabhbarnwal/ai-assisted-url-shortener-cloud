@@ -1,7 +1,7 @@
 # Replace values before running.
 $ProjectId = "ai-assisted-url-shortener"
 $Region = "us-central1"
-$Artifact_Repository = "url-shortener"
+$Repository = "url-shortener"
 $CloudSqlInstance = "url-shortener-postgres"
 $DatabaseName = "urlshortener"
 $DbUsername = "barnwal"
@@ -23,7 +23,7 @@ gcloud services enable `
   secretmanager.googleapis.com `
   iamcredentials.googleapis.com
 
-gcloud artifacts repositories create $Artifact_Repository `
+gcloud artifacts repositories create $Repository `
   --repository-format=docker `
   --location=$Region `
   --description="URL shortener Docker images"
