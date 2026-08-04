@@ -52,3 +52,12 @@ gcloud run services logs read url-shortener `
 
 The GitHub deploy service account needs `roles/logging.viewer` to read these logs from GitHub
 Actions.
+
+If startup logs contain `The Cloud SQL instance does not exist`, create or rename the Cloud SQL
+instance so this command succeeds:
+
+```powershell
+gcloud sql instances describe url-shortener-postgres `
+  --project=ai-assisted-url-shortener `
+  --format="value(connectionName)"
+```

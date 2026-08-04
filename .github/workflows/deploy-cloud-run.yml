@@ -60,6 +60,16 @@ jobs:
         run: |
           gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
 
+      - name: Validate Google Cloud infrastructure
+        run: |
+          gcloud sql instances describe url-shortener-postgres \
+            --project="${PROJECT_ID}" \
+            --format="value(connectionName)"
+          gcloud redis instances describe url-shortener-redis \
+            --project="${PROJECT_ID}" \
+            --region="${REGION}" \
+            --format="value(host)"
+
       - name: Validate Cloud Run runtime variables
         run: |
           if ! [[ "${{ vars.APP_BASE_URL }}" =~ ^https?:// ]]; then
