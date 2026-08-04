@@ -117,6 +117,7 @@ jobs:
 
       - name: Show Cloud Run logs on failure
         if: failure()
+        continue-on-error: true
         run: |
           gcloud run services logs read "${SERVICE_NAME}" \
             --project="${PROJECT_ID}" \

@@ -49,3 +49,6 @@ gcloud run services logs read url-shortener `
   --region=us-central1 `
   --limit=100
 ```
+
+The GitHub deploy service account needs `roles/logging.viewer` to read these logs from GitHub
+Actions.
